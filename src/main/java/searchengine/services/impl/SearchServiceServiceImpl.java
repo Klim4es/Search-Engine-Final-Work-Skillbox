@@ -13,7 +13,7 @@ import searchengine.repository.IndexSearchRepository;
 import searchengine.repository.LemmaRepository;
 import searchengine.repository.PageRepository;
 import searchengine.repository.SiteRepository;
-import searchengine.services.LemmaHandler;
+import searchengine.component.LemmaHandler;
 import searchengine.services.SearchService;
 import searchengine.util.CleanHtmlCode;
 

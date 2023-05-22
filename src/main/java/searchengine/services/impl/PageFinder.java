@@ -10,8 +10,8 @@ import searchengine.model.Page;
 import searchengine.model.SitePage;
 import searchengine.repository.PageRepository;
 import searchengine.repository.SiteRepository;
-import searchengine.services.LemmaHandler;
-import searchengine.services.PageIndexer;
+import searchengine.component.LemmaHandler;
+import searchengine.component.PageIndexer;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;

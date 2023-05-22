@@ -16,8 +16,8 @@ import searchengine.model.Status;
 import searchengine.repository.PageRepository;
 import searchengine.repository.SiteRepository;
 import searchengine.services.IndexingService;
-import searchengine.services.LemmaHandler;
-import searchengine.services.PageIndexer;
+import searchengine.component.LemmaHandler;
+import searchengine.component.PageIndexer;
 
 import java.util.ArrayList;
 import java.util.List;

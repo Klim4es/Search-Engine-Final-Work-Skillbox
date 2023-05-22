@@ -1,4 +1,4 @@
-package searchengine.services;
+package searchengine.component;
 
 import searchengine.model.Page;
 
