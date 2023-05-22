@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import searchengine.component.PageFinder;
 import searchengine.config.Connection;
 import searchengine.config.Site;
 import searchengine.config.SitesList;
