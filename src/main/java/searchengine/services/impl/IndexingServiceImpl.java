@@ -20,6 +20,8 @@ import searchengine.services.IndexingService;
 import searchengine.component.LemmaHandler;
 import searchengine.component.PageIndexer;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -42,7 +44,19 @@ public class IndexingServiceImpl implements IndexingService {
     private static final Logger logger = LoggerFactory.getLogger(IndexingServiceImpl.class);
     private AtomicBoolean indexingProcessing = new AtomicBoolean(false);
 
+    @Override
+    public ResponseEntity<String> findLemmas(SitesList sitesList, URL url) throws IOException {
 
+        try {
+            sitesList.getSites().stream().filter(site -> url.getHost().equals(site.getUrl().getHost())).findFirst().orElseThrow();
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("result: false " +
+                    "error: Данная страница находится за пределами сайтов " +
+                    "указанных в конфигурационном файле");
+        }
+        lemmaHandler.getLemmasFromUrl(url);
+        return ResponseEntity.status(HttpStatus.OK).body("result: true");
+    }
     @Override
     public ResponseEntity startIndexing() {
         if (indexingProcessing.get()) {

@@ -23,7 +23,6 @@ public class ApiController {
 
     private final StatisticsService statisticsService;
     private final IndexingService indexingService;
-    private final LemmaService lemmaService;
     private final SearchService searchService;
     private final SitesList sitesList;
 
@@ -53,6 +52,6 @@ public class ApiController {
 
     @GetMapping("/indexPage")
     public ResponseEntity indexPage(@RequestParam URL url) throws IOException {
-        return lemmaService.findLemmas(sitesList, url);
+        return indexingService.findLemmas(sitesList, url);
     }
 }
