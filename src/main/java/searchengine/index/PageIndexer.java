@@ -1,30 +1,27 @@
-package searchengine.component.impl;
+package searchengine.index;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import searchengine.model.IndexSearch;
 import searchengine.model.Lemma;
 import searchengine.model.Page;
 import searchengine.repository.IndexSearchRepository;
 import searchengine.repository.LemmaRepository;
-import searchengine.component.LemmaHandler;
-import searchengine.component.PageIndexer;
 
 import java.io.IOException;
 import java.util.Map;
 
 @Slf4j
-@Service
+@Component
 @AllArgsConstructor
-public class PageIndexerImpl implements PageIndexer {
+public class PageIndexer {
     private LemmaHandler lemmaHandler;
     private LemmaRepository lemmaRepository;
     private IndexSearchRepository indexSearchRepository;
 
-    @Override
     public void indexHtml(String html, Page indexingPage) {
         long start = System.currentTimeMillis();
         try {

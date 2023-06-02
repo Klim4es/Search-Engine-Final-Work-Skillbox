@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import searchengine.component.PageFinder;
+import searchengine.index.PageFinder;
 import searchengine.config.Connection;
 import searchengine.config.Site;
 import searchengine.config.SitesList;
@@ -17,8 +17,6 @@ import searchengine.model.Status;
 import searchengine.repository.PageRepository;
 import searchengine.repository.SiteRepository;
 import searchengine.services.IndexingService;
-import searchengine.component.LemmaHandler;
-import searchengine.component.PageIndexer;
 
 import java.io.IOException;
 import java.net.URL;

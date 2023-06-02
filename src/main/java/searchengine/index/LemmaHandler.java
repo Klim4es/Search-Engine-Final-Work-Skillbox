@@ -1,4 +1,4 @@
-package searchengine.component.impl;
+package searchengine.index;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.morphology.LuceneMorphology;
@@ -6,7 +6,6 @@ import org.apache.lucene.morphology.russian.RussianLuceneMorphology;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
-import searchengine.component.LemmaHandler;
 
 import java.io.IOException;
 import java.net.URL;
@@ -14,9 +13,8 @@ import java.util.*;
 
 @Component
 @Slf4j
-public class LemmaHandlerImpl implements LemmaHandler {
+public class LemmaHandler {
 
-    @Override
     public Map<String, Integer> getLemmasFromText(String html) throws IOException {
         Map<String, Integer> lemmasInText = new HashMap<>();
         LuceneMorphology luceneMorph = new RussianLuceneMorphology();
@@ -25,7 +23,7 @@ public class LemmaHandlerImpl implements LemmaHandler {
         words.forEach(w -> determineLemma(w, luceneMorph,lemmasInText));
         return lemmasInText;
     }
-    @Override
+
     public List<String> getLemma(String word) throws IOException {
 
         LuceneMorphology russianLuceneMorphology = new RussianLuceneMorphology();
@@ -55,8 +53,6 @@ public class LemmaHandlerImpl implements LemmaHandler {
         }
         return false;
     }
-
-    @Override
     public List<Integer> findLemmaIndexInText(String content, String lemma) throws IOException {
         List<Integer> lemmaIndexList = new ArrayList<>();
         String[] elements = content.toLowerCase(Locale.ROOT).split("\\p{Punct}|\\s");
@@ -97,7 +93,6 @@ public class LemmaHandlerImpl implements LemmaHandler {
 
     }
 
-    @Override
     public void getLemmasFromUrl(URL url) throws IOException {
         org.jsoup.Connection connect = Jsoup.connect(String.valueOf(url));
         Document doc = connect.timeout(60000).get();
