@@ -15,4 +15,7 @@ import java.util.List;
 public interface PageRepository extends JpaRepository<Page, Integer> {
     @Query(value = "SELECT p.* FROM page p JOIN index_search i ON p.id = i.page_id WHERE i.lemma_id IN :lemmas", nativeQuery = true)
     List<Page> findByLemmaList(@Param("lemmas") Collection<Lemma> lemmaListId);
+    int countPagesBySitePage(SitePage site);
+
+
 }

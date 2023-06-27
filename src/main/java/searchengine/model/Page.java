@@ -1,6 +1,7 @@
 package searchengine.model;
 
 import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "page",indexes = {@Index(name = "path_index",columnList = "path")})
 @NoArgsConstructor
+@AllArgsConstructor
 @Setter
 @Getter
 public class Page {

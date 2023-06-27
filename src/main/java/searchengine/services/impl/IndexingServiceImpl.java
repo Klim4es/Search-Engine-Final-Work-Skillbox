@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import searchengine.index.PageFinder;
+import searchengine.component.LemmaParser;
+import searchengine.component.PageFinder;
 import searchengine.config.Connection;
 import searchengine.config.Site;
 import searchengine.config.SitesList;
@@ -17,6 +18,7 @@ import searchengine.model.Status;
 import searchengine.repository.PageRepository;
 import searchengine.repository.SiteRepository;
 import searchengine.services.IndexingService;
+import searchengine.component.PageIndexer;
 
 import java.io.IOException;
 import java.net.URL;
@@ -33,7 +35,7 @@ public class IndexingServiceImpl implements IndexingService {
     @Autowired
     private PageIndexer pageIndexer;
     @Autowired
-    private LemmaHandler lemmaHandler;
+    private LemmaParser lemmaHandler;
     private final SiteRepository siteRepository;
     private final PageRepository pageRepository;
     private final SitesList sitesToIndexing;
@@ -43,16 +45,18 @@ public class IndexingServiceImpl implements IndexingService {
     private AtomicBoolean indexingProcessing = new AtomicBoolean(false);
 
     @Override
-    public ResponseEntity<String> findLemmas(SitesList sitesList, URL url) throws IOException {
+    public ResponseEntity<String> findLemmas(SitesList sitesList, URL url) {
 
         try {
-            sitesList.getSites().stream().filter(site -> url.getHost().equals(site.getUrl().getHost())).findFirst().orElseThrow();
+            sitesList.getSites().stream().filter(site -> url.getHost()
+                    .equals(site.getUrl().getHost())).findFirst().orElseThrow();
+            SitePage site = siteRepository.findByUrl(url.toString());
+            site.getPages().forEach(x -> lemmaHandler.parseOnePage(x));
         } catch (RuntimeException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("result: false " +
                     "error: Данная страница находится за пределами сайтов " +
                     "указанных в конфигурационном файле");
         }
-        lemmaHandler.getLemmasFromUrl(url);
         return ResponseEntity.status(HttpStatus.OK).body("result: true");
     }
     @Override
@@ -128,19 +132,19 @@ public class IndexingServiceImpl implements IndexingService {
                     System.out.println("Запущена индексация "+siteDomain.getUrl());
                     new ForkJoinPool().invoke(new PageFinder(siteRepository,pageRepository,siteDomain, "", resultForkJoinPageIndexer, connection, lemmaHandler,pageIndexer,indexingProcessing));
                 } catch (SecurityException ex) {
-                    SitePage sitePage = siteRepository.findById(siteDomain.getId()).orElseThrow();
+                    SitePage sitePage = siteRepository.findById(siteDomain.getId());
                     sitePage.setStatus(Status.FAILED);
                     sitePage.setLastError(ex.getMessage());
                     siteRepository.save(sitePage);
                 }
                 if (!indexingProcessing.get()) {
-                    SitePage sitePage = siteRepository.findById(siteDomain.getId()).orElseThrow();
+                    SitePage sitePage = siteRepository.findById(siteDomain.getId());
                     sitePage.setStatus(Status.FAILED);
                     sitePage.setLastError("Indexing stopped by user");
                     siteRepository.save(sitePage);
                 } else {
                     System.out.println("Проиндексирован сайт: " + siteDomain.getName());
-                    SitePage sitePage = siteRepository.findById(siteDomain.getId()).orElseThrow();
+                    SitePage sitePage = siteRepository.findById(siteDomain.getId());
                     sitePage.setStatus(Status.INDEXED);
                     siteRepository.save(sitePage);
                 }

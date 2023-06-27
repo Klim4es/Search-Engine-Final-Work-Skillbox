@@ -1,7 +1,6 @@
 package searchengine.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -18,4 +17,8 @@ public interface LemmaRepository extends JpaRepository<Lemma,Integer> {
     @Query(value = "SELECT l.* FROM lemma l WHERE l.lemma IN :lemmas AND l.site_id = :site", nativeQuery = true)
     List<Lemma> findLemmaListBySite(@Param("lemmas") List<String> lemmaList,
                                     @Param("site") SitePage site);
+    Lemma findByLemmaAndSiteId(String lemma, int siteId);
+
+    int countLemmasBySiteId(int site);
+
 }
